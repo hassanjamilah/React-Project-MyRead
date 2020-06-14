@@ -5,7 +5,9 @@ class ListBooks extends React.Component {
 
     render() {
         const { allBooks, shelf ,onChangeBookState} = this.props
-        const filteredBooks = allBooks.filter((b) => (b.shelf === shelf))
+        const filteredBooks = shelf === '' ?
+        allBooks:
+        allBooks.filter((b) => (b.shelf === shelf))
         return (
             <div>
             <button onClick={onChangeBookState}>Hi all</button>

@@ -2,6 +2,7 @@ import React from 'react'
 import * as BooksAPI from './BooksAPI'
 import './App.css'
 import Shelf from './Shelf'
+import SearchBook from './SearchBook'
 class BooksApp extends React.Component {
   state = {
     /**
@@ -50,7 +51,7 @@ class BooksApp extends React.Component {
       <div className="app">
     
        {/* <Book book={this.state.allBooks[0]}/> */}
-       
+       {<SearchBook allBooks={this.state.allBooks} onChangeBookState={(book)=>this.onChangeBookState(book)}/>}
      
        <button onClick={this.onChangeBookState}>Hello</button>
         {
@@ -90,9 +91,9 @@ class BooksApp extends React.Component {
                 <Shelf shelf='read' allBooks={this.state.allBooks } onChangeBookState={this.onChangeBookState} title='Read'/>
               </div>
             </div>
-            <div className="open-search">
+            <a className="open-search">
               <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
-            </div>
+            </a>
           </div>
         )}
       </div>
