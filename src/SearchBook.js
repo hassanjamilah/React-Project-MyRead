@@ -1,6 +1,7 @@
 import React from 'react'
 import ListBooks from './ListBooks'
 import * as BooksAPI from './BooksAPI'
+import {Link} from 'react-router-dom'
 class SearchBook extends React.Component {
     state={
         query:'',
@@ -19,19 +20,61 @@ class SearchBook extends React.Component {
         console.log(query)
         BooksAPI.search(query)
         .then((books)=>{
-            this.setState(()=>{
-                this.state.searchBooks = books
-            })
-            console.log(books)
+            const {allBooks } = this.props
+            if (books){
+                for (let y = 0;y<books.length;y++){
+                    for (let i=0;i<allBooks.length;i++){
+                        if (books[y].id === allBooks[i].id){
+                            books[y].shelf = allBooks[i].shelf
+                            break;
+                        }
+                    } 
+                }
+                this.setState((currentState)=>{
+                    currentState.searchBooks = books
+                })
+                console.log(books)
+            }
+            
         })
     }
   
+ 
+    onSerarchChangeBookState  =  (book) => {
+        
+        console.log('on search change book')
+
+        let oldBooks = this.state.searchBooks;
+        let founded = false;
+        for(let i = 0 ; i<oldBooks.length; i++){
+          if (oldBooks[i].id === book.id){
+           console.log(oldBooks[i].id , book.shelf) 
+           oldBooks[i].shelf = book.shelf
+           founded = true;
+          }
+        
+        }
+        if (founded === false && book.shelf != null){
+          
+          console.log('old books before' ,  oldBooks)
+          oldBooks.push(book)
+          console.log('old books after' ,  oldBooks)
+         
+        } 
+        this.setState(
+          (currentState)=>({
+       
+            allBooks:oldBooks
+          })
+        )
+    }
+
     componentDidMount(){
         console.log('Did mount')
         BooksAPI.search('android')
         .then((books)=>{
-            this.setState(()=>{
-                this.state.searchBooks = books
+            this.setState((currentState)=>{
+                currentState.searchBooks = books
             })
             console.log('books 11' , books)
         })
@@ -51,7 +94,11 @@ class SearchBook extends React.Component {
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <button className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</button>
+                <Link
+                to='/'
+                className="close-search"
+                ></Link>
+                    {/* <button className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</button> */}
                     <div className="search-books-input-wrapper">
                         {/*
                   NOTES: The search from BooksAPI is limited to a particular set of search terms.
@@ -70,7 +117,7 @@ class SearchBook extends React.Component {
                     </div>
                 </div>
                 <div className="search-books-results">
-                <ListBooks allBooks={filteredBooks} shelf='' onChangeBookState= {onChangeBookState}/>
+                <ListBooks allBooks={filteredBooks} shelf='' onChangeBookState= {onChangeBookState}  onSerarchChangeBookState={(book)=>this.onSerarchChangeBookState(book)}/>
                     <ol className="books-grid"></ol>
                 </div>
             </div>

@@ -52,19 +52,23 @@ class Book extends React.Component {
     // }
 
     handleChangeShelf = (e  ) => {
-        const {book,onChangeBookState} = this.props
+        const {book,onChangeBookState,onSerarchChangeBookState} = this.props
         console.log(e.target.value)
 
         console.log('Old book state: ', book.shelf)
         book.shelf = e.target.value
         console.log('new book state: ', book.shelf)
         onChangeBookState(book)
+        if (onSerarchChangeBookState){
+            onSerarchChangeBookState(book)
+        }
+       
        
         
     }
    
     render() {
-        const {book,onChangeBookState} = this.props
+        const {book} = this.props
         const defaultValue = book.shelf == null ? 'none':book.shelf
       
        
@@ -72,7 +76,7 @@ class Book extends React.Component {
         return (
             <div>
            
-                <button onClick={onChangeBookState}>my button</button>
+                
                 
                 <div className="book">
                     <div className="book-top">
@@ -91,7 +95,7 @@ class Book extends React.Component {
                     </div>
                     <div className="book-title">{book.title}</div>
                     <div className="book-authors">{book.subtitle}</div>
-                    <div>{book.shelf}</div>
+                    {/* <div>{book.shelf}</div> */}
                 </div>
             </div>
         )
