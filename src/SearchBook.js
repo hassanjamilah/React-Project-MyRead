@@ -18,8 +18,25 @@ class SearchBook extends React.Component {
             query: query
         }))
         console.log(query)
+        if (query === ''){
+            this.setState((currentState)=>{
+                currentState.searchBooks = []
+            })
+            return
+        }
         BooksAPI.search(query)
         .then((books)=>{
+            console.log('the books are: ' , books)
+            console.log('error' , books.error)
+            if (typeof books.error !== 'undefined'){
+                console.log('error')
+                this.setState(()=>({
+                    
+                    searchBooks:[]  
+                    
+                }))
+                return
+            }
             const {allBooks } = this.props
             if (books){
                 for (let y = 0;y<books.length;y++){
@@ -30,9 +47,10 @@ class SearchBook extends React.Component {
                         }
                     } 
                 }
-                this.setState((currentState)=>{
-                    currentState.searchBooks = books
-                })
+                this.setState(()=>({
+                    searchBooks:books  
+                    
+                }))
                 console.log(books)
             }
             
@@ -69,16 +87,7 @@ class SearchBook extends React.Component {
         )
     }
 
-    componentDidMount(){
-        console.log('Did mount')
-        BooksAPI.search('android')
-        .then((books)=>{
-            this.setState((currentState)=>{
-                currentState.searchBooks = books
-            })
-            console.log('books 11' , books)
-        })
-    }
+
 
     
     render() {
@@ -87,7 +96,7 @@ class SearchBook extends React.Component {
         
 
         const filteredBooks = query === '' ?
-        allBooks:
+        []:
         searchBooks
         // allBooks.filter((b) => (b.title.toLowerCase().includes(query.toLowerCase()) ))
 
